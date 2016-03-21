@@ -39,8 +39,15 @@ RUN DEBIAN_FRONTEND=noninteractive mix archive.install --force https://github.co
 RUN DEBIAN_FRONTEND=noninteractive npm install -g brunch \
     && npm install
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git && mkdir -p /tmp/rebar && cd /tmp/rebar && git clone https://github.com/rebar/rebar . && make && cp rebar /usr/bin/rebar && chmod +x /usr/bin/rebar
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN DEBIAN_FRONTEND=noninteractive mix phoenix.new app --force
+RUN DEBIAN_FRONTEND=noninteractive cd app && mix hex.info && echo "Y" | mix deps.get --force
+RUN DEBIAN_FRONTEND=noninteractive cd app && npm install && node node_modules/brunch/bin/brunch build
+#RUN DEBIAN_FRONTEND=noninteractive cd app && echo "Y" | mix ecto.create
 
 EXPOSE 4000
