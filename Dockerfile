@@ -1,13 +1,13 @@
 # inspired by https://hub.docker.com/r/soriyath/debian-phoenixframework/~/dockerfile/
 
-FROM debian:jessie
+FROM phusion/baseimage:0.9.18
 
 RUN DEBIAN_FRONTEND=noninteractive set -ex \
     && apt-get update \
-    && apt-get install -y wget build-essential python
+    && apt-get install -y git wget build-essential python
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
-    && apt-get install -y locales locales-all \
+    && apt-get install -y locales \
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8 \
@@ -39,7 +39,7 @@ RUN DEBIAN_FRONTEND=noninteractive mix archive.install --force https://github.co
 RUN DEBIAN_FRONTEND=noninteractive npm install -g brunch \
     && npm install
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y git && mkdir -p /tmp/rebar && cd /tmp/rebar && git clone https://github.com/rebar/rebar . && make && cp rebar /usr/bin/rebar && chmod +x /usr/bin/rebar
+RUN DEBIAN_FRONTEND=noninteractive mkdir -p /tmp/rebar && cd /tmp/rebar && git clone https://github.com/rebar/rebar . && make && cp rebar /usr/bin/rebar && chmod +x /usr/bin/rebar
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get clean \
     && apt-get autoremove \
@@ -51,3 +51,5 @@ RUN DEBIAN_FRONTEND=noninteractive cd app && npm install && node node_modules/br
 #RUN DEBIAN_FRONTEND=noninteractive cd app && echo "Y" | mix ecto.create
 
 EXPOSE 4000
+
+CMD ["/sbin/my_init"]

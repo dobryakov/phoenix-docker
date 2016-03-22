@@ -4,9 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: local/phoenix
+    image: local/phoenix:ubuntu
     volumes:
-      - .:/srv/www/app
+      - ./www:/srv/www
     ports:
       - "4000:4000"
     links:
