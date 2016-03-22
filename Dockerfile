@@ -4,7 +4,7 @@ FROM phusion/baseimage:0.9.18
 
 RUN DEBIAN_FRONTEND=noninteractive set -ex \
     && apt-get update \
-    && apt-get install -y git wget build-essential python
+    && apt-get install -y git wget build-essential python postgresql-client
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && apt-get install -y locales \
