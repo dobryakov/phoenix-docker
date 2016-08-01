@@ -11,6 +11,10 @@ docker-compose up -d
 
 docker exec -t -i phoenixdev_app_1 bash -l
 
+cd /srv/www/app
+
+mix deps.get
+
 mix ecto.create
 
 mix phoenix.server
