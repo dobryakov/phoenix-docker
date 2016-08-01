@@ -15,6 +15,8 @@ cd /srv/www/app
 
 mix deps.get
 
-mix ecto.create
+mix ecto.create (optional, because this example assumes that database software is installed in another docker container)
+
+npm install (optional)
 
 mix phoenix.server
