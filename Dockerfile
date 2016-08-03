@@ -1,6 +1,6 @@
 # inspired by https://hub.docker.com/r/soriyath/debian-phoenixframework/~/dockerfile/
 
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.9.19
 
 RUN DEBIAN_FRONTEND=noninteractive set -ex \
     && apt-get update \
@@ -35,17 +35,17 @@ RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb \
     && apt-get install -y --fix-missing build-essential esl-erlang elixir inotify-tools \
     && mix local.hex --force
 
+RUN DEBIAN_FRONTEND=noninteractive mkdir -p /tmp/rebar && cd /tmp/rebar && git clone https://github.com/rebar/rebar . && make && cp rebar /usr/bin/rebar && chmod +x /usr/bin/rebar
+
 RUN DEBIAN_FRONTEND=noninteractive mix archive.install --force https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
+RUN DEBIAN_FRONTEND=noninteractive mix phoenix.new app
 RUN DEBIAN_FRONTEND=noninteractive npm install -g brunch \
     && npm install
-
-RUN DEBIAN_FRONTEND=noninteractive mkdir -p /tmp/rebar && cd /tmp/rebar && git clone https://github.com/rebar/rebar . && make && cp rebar /usr/bin/rebar && chmod +x /usr/bin/rebar
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN DEBIAN_FRONTEND=noninteractive mix phoenix.new app --force
 RUN DEBIAN_FRONTEND=noninteractive cd app && mix hex.info && echo "Y" | mix deps.get --force
 RUN DEBIAN_FRONTEND=noninteractive cd app && npm install && node node_modules/brunch/bin/brunch build
 #RUN DEBIAN_FRONTEND=noninteractive cd app && echo "Y" | mix ecto.create
